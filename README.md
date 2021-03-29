@@ -117,7 +117,7 @@ python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 1 --load-checkpo
 ## Collect Data using Trained Agents
 
 ```python
-python gen_data.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agents/ --rollouts 120 --rootdir datasets/ --no-render
+python gen_data.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --folder rl-trained-agents/ --no-render --rollouts 120 --rootdir datasets/ --info thread_1
 ```
 
 ### Inspect Collected Data

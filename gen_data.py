@@ -3,6 +3,7 @@ import importlib
 import os
 import sys
 import random
+import json
 
 import numpy as np
 import torch as th
@@ -56,6 +57,7 @@ def main():  # noqa: C901
     )
     parser.add_argument('--rollouts', type=int, help="Total number of rollouts.")
     parser.add_argument('--rootdir', type=str, default='datasets', help="Directory to store rollouts")
+    parser.add_argument('--info', type=str, default='thread_0', help="extra info for rollouts")
     parser.add_argument('--epsilon', type=float, default=0.2, help="Epsilon greedy probability")
     args = parser.parse_args()
 
@@ -137,7 +139,8 @@ def main():  # noqa: C901
         should_render=not args.no_render,
         hyperparams=hyperparams,
         env_kwargs=env_kwargs,
-        record_kwargs={'out_dir': os.path.join(args.rootdir, env_id)},
+        record_kwargs={'out_dir': os.path.join(args.rootdir, env_id),
+                       'info': args.info},
     )
 
     kwargs = dict(seed=args.seed)
@@ -169,6 +172,7 @@ def main():  # noqa: C901
     ep_len = 0
     # For HER, monitor success rate
     successes = []
+    total_frames = 0
     try:
         for rollout_idx in range(args.rollouts):
             print(f"rollout_idx: {rollout_idx}")
@@ -217,10 +221,19 @@ def main():  # noqa: C901
 
                 if args.n_envs == 1 and is_atari and \
                         infos is not None and infos[0].get("episode") is not None:
+                    total_frames += infos[0].get("episode")["l"] + 1
                     break  # episode ends
 
     except KeyboardInterrupt:
         pass
+
+    total_frames = (total_frames - 125 * args.rollouts) \
+        if env_id == 'SpaceInvadersNoFrameskip-v4' else total_frames
+    print(f"total saved frames: {total_frames}")
+    with open(os.path.join(args.rootdir, env_id, "info.json"), 'w') as outfile:
+        json.dump(obj={'total_frames': total_frames, 'epsilon': args.epsilon,
+                       'algo': args.algo},
+                  fp=outfile, indent=4)
 
     if args.verbose > 0 and len(successes) > 0:
         print(f"Success rate: {100 * np.mean(successes):.2f}%")
