@@ -55,7 +55,7 @@ def main():  # noqa: C901
         "--env-kwargs", type=str, nargs="+", action=StoreDict, help="Optional keyword argument to pass to the env constructor"
     )
     parser.add_argument('--rollouts', type=int, help="Total number of rollouts.")
-    parser.add_argument('--rootdir', type=str, default='out', help="Directory to store rollouts")
+    parser.add_argument('--rootdir', type=str, default='datasets', help="Directory to store rollouts")
     parser.add_argument('--epsilon', type=float, default=0.2, help="Epsilon greedy probability")
     args = parser.parse_args()
 

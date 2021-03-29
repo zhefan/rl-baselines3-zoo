@@ -66,18 +66,9 @@ class RecordEnv(gym.Wrapper):
         return state
 
     def _close(self):  # ! default close does not work
-        print(f"> End of rollout {self.episode_num}, {len(self.s_rollout)} frames...")
+        print(f"> End of rollout {self.episode_num}, {self.n_step} frames...")
         np.savez(os.path.join(self.out_dir, f"rollout_{self.episode_num}"),
                  observations=np.array(self.s_rollout),
                  rewards=np.array(self.r_rollout),
                  actions=np.array(self.a_rollout),
                  terminals=np.array(self.d_rollout))
-
-
-def inspect_experience():
-    experience = np.load('out/rollout_0.npz')
-    print(len(experience['observations']))
-
-
-if __name__ == '__main__':
-    inspect_experience()

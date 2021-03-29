@@ -114,6 +114,12 @@ To load a checkpoint (here the checkpoint name is `rl_model_10000_steps.zip`):
 python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 1 --load-checkpoint 10000
 ```
 
+## Collect Data using Trained Agents
+
+```python
+python gen_data.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agents/ --rollouts 120 --rootdir datasets/ --no-render
+```
+
 ## Hyperparameter yaml syntax
 
 The syntax used in `hyperparameters/algo_name.yml` for setting hyperparameters (likewise the syntax to [overwrite hyperparameters](https://github.com/DLR-RM/rl-baselines3-zoo#overwrite-hyperparameters) on the cli) may be specialized if the argument is a function.  See examples in the `hyperparameters/` directory. For example:
