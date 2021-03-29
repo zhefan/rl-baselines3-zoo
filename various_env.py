@@ -43,10 +43,10 @@ class RecordEnv(gym.Wrapper):
         action_vec = np.zeros(self.action_n)
         action_vec[action] = 1
 
-        self.s_rollout += [next_state]
         self.a_rollout += [action_vec]
         self.r_rollout += [reward]
         self.d_rollout += [done]
+        self.s_rollout += [next_state]
 
         self.n_step += 1  # increment step
         if done:  # episode done -> save

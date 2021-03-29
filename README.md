@@ -120,6 +120,12 @@ python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 1 --load-checkpo
 python gen_data.py --algo a2c --env BreakoutNoFrameskip-v4 --folder rl-trained-agents/ --rollouts 120 --rootdir datasets/ --no-render
 ```
 
+### Inspect Collected Data
+
+```python
+python inpsect_data.py --game breakout
+```
+
 ## Hyperparameter yaml syntax
 
 The syntax used in `hyperparameters/algo_name.yml` for setting hyperparameters (likewise the syntax to [overwrite hyperparameters](https://github.com/DLR-RM/rl-baselines3-zoo#overwrite-hyperparameters) on the cli) may be specialized if the argument is a function.  See examples in the `hyperparameters/` directory. For example:

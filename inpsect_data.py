@@ -68,9 +68,9 @@ def inspect_experience(args):
         display.set_data(state)
         plt.title(action)
         plt.pause(.05)
-        if action_vec[2] == 1:
+        if action_vec[1] == 1:
             print(action)
-            # breakpoint()
+            breakpoint()
 
 
 if __name__ == '__main__':
