@@ -21,11 +21,10 @@ def check_path(input_path):
 class RecordEnv(gym.Wrapper):
     """Record env experience"""
 
-    def __init__(self, env, out_dir, info):
+    def __init__(self, env, **kwargs):
         super().__init__(env)
         print('Using record environment')
-        self.out_dir = out_dir
-        self.info = info
+        self.out_dir = kwargs['out_dir']
         self.n_step = 0
         self.episode_num = -1  # starting at 0
         self.action_n = env.action_space.n

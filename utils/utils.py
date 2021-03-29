@@ -181,6 +181,7 @@ def create_test_env(
     should_render: bool = True,
     hyperparams: Optional[Dict[str, Any]] = None,
     env_kwargs: Optional[Dict[str, Any]] = None,
+    record_kwargs: Optional[Dict[str, Any]] = None,
 ) -> VecEnv:
     """
     Create environment for testing a trained agent
@@ -193,6 +194,7 @@ def create_test_env(
     :param should_render: For Pybullet env, display the GUI
     :param hyperparams: Additional hyperparams (ex: n_stack)
     :param env_kwargs: Optional keyword argument to pass to the env constructor
+    :param record_kwargs: Keyword arguments to pass to the ``RecordEnv`` class constructor.
     :return:
     """
     # Avoid circular import
@@ -223,6 +225,7 @@ def create_test_env(
         env_kwargs=env_kwargs,
         vec_env_cls=vec_env_cls,
         vec_env_kwargs=vec_env_kwargs,
+        record_kwargs=record_kwargs,
     )
 
     # Load saved stats for normalizing input and rewards
@@ -258,6 +261,7 @@ def make_vec_env(
     vec_env_cls: Optional[Type[Union[DummyVecEnv, SubprocVecEnv]]] = None,
     vec_env_kwargs: Optional[Dict[str, Any]] = None,
     monitor_kwargs: Optional[Dict[str, Any]] = None,
+    record_kwargs: Optional[Dict[str, Any]] = None,
 ) -> VecEnv:
     """
     Create a wrapped, monitored ``VecEnv``.
@@ -277,6 +281,7 @@ def make_vec_env(
     :param vec_env_cls: A custom ``VecEnv`` class constructor. Default: None.
     :param vec_env_kwargs: Keyword arguments to pass to the ``VecEnv`` class constructor.
     :param monitor_kwargs: Keyword arguments to pass to the ``Monitor`` class constructor.
+    :param record_kwargs: Keyword arguments to pass to the ``RecordEnv`` class constructor.
     :return: The wrapped environment
     """
     env_kwargs = {} if env_kwargs is None else env_kwargs
@@ -299,7 +304,7 @@ def make_vec_env(
             if monitor_path is not None:
                 os.makedirs(monitor_dir, exist_ok=True)
             env = Monitor(env, filename=monitor_path, **monitor_kwargs)
-            env = RecordEnv(env, 'out', 'test')
+            env = RecordEnv(env, **record_kwargs)
             # Optionally, wrap the environment with the provided wrapper
             if wrapper_class is not None:
                 env = wrapper_class(env)
