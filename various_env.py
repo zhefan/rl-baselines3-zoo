@@ -28,6 +28,7 @@ class RecordEnv(gym.Wrapper):
         self.n_step = 0
         self.episode_num = -1  # starting at 0
         self.action_n = env.action_space.n
+        self.env_id = env.spec.id
 
         self.s_rollout = []
         self.a_rollout = []
@@ -66,9 +67,12 @@ class RecordEnv(gym.Wrapper):
         return state
 
     def _close(self):  # ! default close does not work
-        print(f"> End of rollout {self.episode_num}, {self.n_step} frames...")
+        # skip starting frames if space invaders
+        trunc_idx = 125 if self.env_id == 'SpaceInvadersNoFrameskip-v4' else 0
+        print(f"> End of rollout {self.episode_num}, {self.n_step} frames..."
+              f"trunc idx: {trunc_idx}, saving {len(self.s_rollout[trunc_idx:])} frames")
         np.savez(os.path.join(self.out_dir, f"rollout_{self.episode_num}"),
-                 observations=np.array(self.s_rollout),
-                 rewards=np.array(self.r_rollout),
-                 actions=np.array(self.a_rollout),
-                 terminals=np.array(self.d_rollout))
+                 observations=np.array(self.s_rollout[trunc_idx:]),
+                 rewards=np.array(self.r_rollout[trunc_idx:]),
+                 actions=np.array(self.a_rollout[trunc_idx:]),
+                 terminals=np.array(self.d_rollout[trunc_idx:]))
