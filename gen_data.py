@@ -232,7 +232,7 @@ def main():  # noqa: C901
     print(f"total saved frames: {total_frames}")
     with open(os.path.join(args.rootdir, env_id, "info.json"), 'w') as outfile:
         json.dump(obj={'total_frames': total_frames, 'epsilon': args.epsilon,
-                       'algo': args.algo},
+                       'algo': args.algo, 'rollouts': args.rollouts},
                   fp=outfile, indent=4)
 
     if args.verbose > 0 and len(successes) > 0:
