@@ -304,7 +304,8 @@ def make_vec_env(
             if monitor_path is not None:
                 os.makedirs(monitor_dir, exist_ok=True)
             env = Monitor(env, filename=monitor_path, **monitor_kwargs)
-            env = RecordEnv(env, **record_kwargs)
+            if record_kwargs is not None:
+                env = RecordEnv(env, **record_kwargs)
             # Optionally, wrap the environment with the provided wrapper
             if wrapper_class is not None:
                 env = wrapper_class(env)

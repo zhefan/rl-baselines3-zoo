@@ -116,8 +116,14 @@ python enjoy.py --algo algo_name --env env_id -f logs/ --exp-id 1 --load-checkpo
 
 ## Collect Data using Trained Agents
 
+To use a trained agent from rl-trained-agents repo:
 ```python
-python gen_data.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --folder rl-trained-agents/ --no-render --rollouts 120 --rootdir datasets/ --info thread_1
+python gen_data.py --algo a2c --env SpaceInvadersNoFrameskip-v4 -f rl-trained-agents/ --no-render --rollouts 160 --rootdir datasets/ --info thread_1
+```
+
+To use an agent trained by yourself:
+```python
+python gen_data.py --algo a2c --env SpaceInvaders-v4 -f logs/ --load-best --no-render --rollouts 480 --rootdir datasets/ --info thread_1
 ```
 
 ### Inspect Collected Data

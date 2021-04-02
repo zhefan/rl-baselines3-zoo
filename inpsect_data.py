@@ -46,9 +46,9 @@ def action_dict(action_vec, game):
 
 
 def inspect_experience(args):
-    experience = np.load('datasets/BreakoutNoFrameskip-v4/rollout_0.npz') \
+    experience = np.load('datasets/Breakout-v4/thread_0/rollout_0.npz') \
         if args.game == 'breakout' \
-        else np.load('datasets/SpaceInvadersNoFrameskip-v4/rollout_0.npz')
+        else np.load('datasets/SpaceInvaders-v4/thread_0/rollout_0.npz')
     print(len(experience['observations']))
     print(len(experience['actions']))
     print(len(experience['rewards']))
@@ -70,7 +70,7 @@ def inspect_experience(args):
         plt.pause(.05)
         if action_vec[1] == 1:
             print(action)
-            breakpoint()
+            # breakpoint()
 
 
 if __name__ == '__main__':

@@ -70,6 +70,7 @@ class RecordEnv(gym.Wrapper):
     def _close(self):  # ! default close does not work
         # skip starting frames if space invaders
         trunc_idx = 125 if self.env_id == 'SpaceInvadersNoFrameskip-v4' else 0
+        trunc_idx = 36 if self.env_id == 'SpaceInvaders-v4' else 0
         print(f"> End of rollout {self.episode_num}, {self.n_step} frames..."
               f"trunc idx: {trunc_idx}, saving {len(self.s_rollout[trunc_idx:])} frames")
         np.savez(os.path.join(self.out_dir, self.info, f"rollout_{self.episode_num}"),
