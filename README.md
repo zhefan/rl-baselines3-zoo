@@ -132,6 +132,16 @@ python gen_data.py --algo a2c --env SpaceInvaders-v4 -f logs/ --load-best --no-r
 python inpsect_data.py --game breakout
 ```
 
+### Tricks
+
+- No need to set `num-threads` as it is used in CPU mode only
+
+- To speed up training, increase `n_envs` in `hyperparameters/algo_name.yml`, or `--hyperparams n_envs:24`
+
+- A2C with `--vec-env subproc` may help when `n_envs` is over 16.
+
+- Example command: `python train.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --tensorboard-log ~/log_temp --save-freq 10000000 -n 50000000 --seed 0 --eval-freq -1 --vec-env subproc --hyperparams n_envs:24`
+
 ## Hyperparameter yaml syntax
 
 The syntax used in `hyperparameters/algo_name.yml` for setting hyperparameters (likewise the syntax to [overwrite hyperparameters](https://github.com/DLR-RM/rl-baselines3-zoo#overwrite-hyperparameters) on the cli) may be specialized if the argument is a function.  See examples in the `hyperparameters/` directory. For example:
