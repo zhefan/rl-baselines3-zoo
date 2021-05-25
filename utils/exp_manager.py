@@ -34,6 +34,8 @@ from utils.callbacks import SaveVecNormalizeCallback, TrialEvalCallback
 from utils.hyperparams_opt import HYPERPARAMS_SAMPLER
 from utils.utils import ALGOS, get_callback_list, get_latest_run_id, get_wrapper_class, linear_schedule
 
+from logging_callback import EpisodeRewCallback
+
 
 class ExperimentManager(object):
     """
@@ -377,6 +379,8 @@ class ExperimentManager(object):
         os.makedirs(self.params_path, exist_ok=True)
 
     def create_callbacks(self):
+
+        self.callbacks.append(EpisodeRewCallback(verbose=1))
 
         if self.save_freq > 0:
             # Account for the number of parallel environments
