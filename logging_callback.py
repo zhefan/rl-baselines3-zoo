@@ -37,8 +37,13 @@ class EpisodeRewCallback(BaseCallback):
         This event is triggered before updating the policy.
         """
         ep_info_buffer = self.model.ep_info_buffer
+        print(
+            f"num_timesteps: {self.model.num_timesteps} "
+            f"n_steps: {self.model.n_steps} "
+        )
         rollout_ep_rew = self.model.rollout_buffer.rewards.sum(axis=0)
         if len(ep_info_buffer) > 0 and len(ep_info_buffer[0]) > 0:
+            # breakpoint()
             avg_ep_rew = safe_mean([ep_info["r"] for ep_info in ep_info_buffer])
             avg_ep_len = safe_mean([ep_info["l"] for ep_info in ep_info_buffer])
             self.logger.record(
@@ -55,6 +60,7 @@ class EpisodeRewCallback(BaseCallback):
             print(f"avg_ep_len: {avg_ep_len}")
             print(
                 f"len rollout_ep_rew: {self.model.rollout_buffer.rewards.shape} "
-                f"sum rollout_ep_rew: {rollout_ep_rew}"
+                f"sum rollout_ep_rew: {rollout_ep_rew} "
+                f"buffer size: {self.model.rollout_buffer.size()}"
             )
             print("--------------------------------------")

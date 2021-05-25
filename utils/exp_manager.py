@@ -24,6 +24,7 @@ from stable_baselines3.common.preprocessing import is_image_space, is_image_spac
 from stable_baselines3.common.sb2_compat.rmsprop_tf_like import RMSpropTFLike  # noqa: F401
 from stable_baselines3.common.utils import constant_fn
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv, VecFrameStack, VecNormalize, VecTransposeImage
+from stable_baselines3.common import logger
 
 # For custom activation fn
 from torch import nn as nn  # noqa: F401
@@ -33,8 +34,6 @@ import utils.import_envs  # noqa: F401 pytype: disable=import-error
 from utils.callbacks import SaveVecNormalizeCallback, TrialEvalCallback
 from utils.hyperparams_opt import HYPERPARAMS_SAMPLER
 from utils.utils import ALGOS, get_callback_list, get_latest_run_id, get_wrapper_class, linear_schedule
-
-from logging_callback import EpisodeRewCallback
 
 
 class ExperimentManager(object):
@@ -136,6 +135,9 @@ class ExperimentManager(object):
             self.log_path, f"{self.env_id}_{get_latest_run_id(self.log_path, self.env_id) + 1}{uuid_str}"
         )
         self.params_path = f"{self.save_path}/{self.env_id}"
+
+        # config logger
+        logger.configure(folder=os.path.join(self.save_path, 'log'), format_strings=['log', 'csv'])
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """
@@ -379,8 +381,6 @@ class ExperimentManager(object):
         os.makedirs(self.params_path, exist_ok=True)
 
     def create_callbacks(self):
-
-        self.callbacks.append(EpisodeRewCallback(verbose=1))
 
         if self.save_freq > 0:
             # Account for the number of parallel environments
