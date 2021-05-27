@@ -437,6 +437,9 @@ Download Stable-Baselines3 from [here](https://github.com/zhefan/stable-baseline
 apt-get install swig cmake ffmpeg
 cd ../ && git clone https://github.com/zhefan/stable-baselines3.git
 cd ../rl-baselines3-zoo/
+python3.7 -m venv venv
+. venv/bin/activate
+pip install -U pip
 pip install -e ../stable-baselines3/[docs,tests,extra]
 pip install -r requirements.txt
 ```
