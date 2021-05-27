@@ -24,7 +24,6 @@ from stable_baselines3.common.preprocessing import is_image_space, is_image_spac
 from stable_baselines3.common.sb2_compat.rmsprop_tf_like import RMSpropTFLike  # noqa: F401
 from stable_baselines3.common.utils import constant_fn
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv, VecFrameStack, VecNormalize, VecTransposeImage
-from stable_baselines3.common import logger
 
 # For custom activation fn
 from torch import nn as nn  # noqa: F401
@@ -135,9 +134,6 @@ class ExperimentManager(object):
             self.log_path, f"{self.env_id}_{get_latest_run_id(self.log_path, self.env_id) + 1}{uuid_str}"
         )
         self.params_path = f"{self.save_path}/{self.env_id}"
-
-        # config logger
-        logger.configure(folder=os.path.join(self.save_path, 'log'), format_strings=['log', 'csv'])
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """

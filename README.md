@@ -429,8 +429,15 @@ You can train agents online using [colab notebook](https://colab.research.google
 Min version: stable-baselines3[extra] >= 1.0
 and sb3_contrib >= 1.0
 
+### Due to logger configure issue, use custom Stable-Baselines3
+
+Download Stable-Baselines3 from [here](https://github.com/zhefan/stable-baselines3.git)
+
 ```
 apt-get install swig cmake ffmpeg
+cd ../ && git clone https://github.com/zhefan/stable-baselines3.git
+cd ../rl-baselines3-zoo/
+pip install -e ../stable-baselines3/[docs,tests,extra]
 pip install -r requirements.txt
 ```
 
