@@ -11,6 +11,6 @@ pyyaml>=5.1
 sb3-contrib>=1.1.0a11
 cloudpickle>=1.5.0
 # tmp fix: ROM missing in newest release
-atari-py==0.2.6
+# atari-py==0.2.6 yanked
 plotly
 panda-gym
