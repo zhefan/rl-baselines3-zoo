@@ -145,6 +145,8 @@ class ExperimentManager(object):
         self.params_path = f"{self.save_path}/{self.env_id}"
         self.out_logger = f"{self.save_path}/log"
 
+        self.is_replearn = args.replearn  # whether rep learned encoder
+
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """
         Read hyperparameters, pre-process them (create schedules, wrappers, callbacks, action noise objects)
@@ -247,6 +249,8 @@ class ExperimentManager(object):
             hyperparams_dict = yaml.safe_load(f)
             if self.env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[self.env_id]
+            elif self.is_replearn:
+                hyperparams = hyperparams_dict["replearn"]
             elif self._is_atari:
                 hyperparams = hyperparams_dict["atari"]
             else:
