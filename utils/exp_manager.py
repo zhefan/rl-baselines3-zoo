@@ -28,6 +28,9 @@ from stable_baselines3.common.utils import constant_fn
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv, VecFrameStack, VecNormalize, VecTransposeImage
 from stable_baselines3.common.logger import configure
 
+# For rep learn
+from stable_baselines3.rep_learn.atari_rep import AtariRepNatureCNN
+
 # For custom activation fn
 from torch import nn as nn  # noqa: F401
 

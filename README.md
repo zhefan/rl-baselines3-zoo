@@ -59,6 +59,16 @@ python train.py --algo sac --env Pendulum-v0 --save-replay-buffer
 ```
 It will be automatically loaded if present when continuing training.
 
+### Extra
+
+To debug representation learning encoder:
+
+```bash
+python train.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --save-freq 10000000 -n 50000000 --seed 0 --eval-freq -1 --vec-env dummy --hyperparams n_envs:1 --replearn
+```
+
+Note that the stable-baselines3 must use the `replearn` branch
+
 ## Plot Scripts
 
 Plot scripts (to be documented, see "Results" sections in SB3 documentation):
