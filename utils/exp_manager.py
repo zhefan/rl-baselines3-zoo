@@ -29,9 +29,10 @@ from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv,
 from stable_baselines3.common.logger import configure
 
 # For rep learn
-from stable_baselines3.rep_learn.atari_rep import AtariRepNatureCNN
+from stable_baselines3.replearn.atari_rep import AtariRepNatureCNN
 
 # For custom activation fn
+import torch
 from torch import nn as nn  # noqa: F401
 
 # Register custom envs
@@ -148,7 +149,7 @@ class ExperimentManager(object):
         self.params_path = f"{self.save_path}/{self.env_id}"
         self.out_logger = f"{self.save_path}/log"
 
-        self.is_replearn = args.replearn  # whether rep learned encoder
+        self.replearn = args.replearn  # whether rep learned encoder
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """
@@ -181,6 +182,13 @@ class ExperimentManager(object):
                 verbose=self.verbose,
                 **self._hyperparams,
             )
+            # load replearn encoder weights
+            if self.replearn is not None:
+                print(f"Loading representation encoder parameters from {self.replearn}")
+                pretrained_encoder = torch.load(self.replearn)
+                # set feature extractor parameters
+                model.policy.features_extractor.load_state_dict(pretrained_encoder)
+
             new_logger = configure(self.out_logger, ["stdout", "csv", "tensorboard"])
             model.set_logger(new_logger)
 
@@ -252,7 +260,7 @@ class ExperimentManager(object):
             hyperparams_dict = yaml.safe_load(f)
             if self.env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[self.env_id]
-            elif self.is_replearn:
+            elif self.replearn is not None:
                 hyperparams = hyperparams_dict["replearn"]
             elif self._is_atari:
                 hyperparams = hyperparams_dict["atari"]
