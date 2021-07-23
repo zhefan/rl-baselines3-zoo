@@ -64,7 +64,7 @@ It will be automatically loaded if present when continuing training.
 To debug representation learning encoder:
 
 ```bash
-python train.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --save-freq 10000000 -n 50000000 --seed 0 --eval-freq -1 --vec-env dummy --hyperparams n_envs:1 --replearn
+python train.py --algo a2c --env SpaceInvadersNoFrameskip-v4 --save-freq 10000000 -n 50000000 --seed 0 --eval-freq -1 --vec-env dummy --hyperparams n_envs:1 --replearn <path-to-encoder.pt>
 ```
 
 Note that the stable-baselines3 must use the `replearn` branch
