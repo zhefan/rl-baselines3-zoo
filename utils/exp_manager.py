@@ -149,7 +149,8 @@ class ExperimentManager(object):
         self.params_path = f"{self.save_path}/{self.env_id}"
         self.out_logger = f"{self.save_path}/log"
 
-        self.replearn = args.replearn  # whether rep learned encoder
+        self.replearn = args.replearn  # rep learned encoder path
+        self.encfreeze = args.encfreeze  # whether to freeze encoder weight
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
         """
@@ -188,6 +189,10 @@ class ExperimentManager(object):
                 pretrained_encoder = torch.load(self.replearn)
                 # set feature extractor parameters
                 model.policy.features_extractor.load_state_dict(pretrained_encoder)
+                if self.encfreeze:  # freeze encoder weight
+                    print("Freeze representation encoder weights during training")
+                    for param in model.policy.features_extractor.parameters():
+                        param.requires_grad = False
 
             new_logger = configure(self.out_logger, ["stdout", "csv", "tensorboard"])
             model.set_logger(new_logger)
