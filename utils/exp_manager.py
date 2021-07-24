@@ -143,8 +143,10 @@ class ExperimentManager(object):
         self.save_replay_buffer = save_replay_buffer
 
         self.log_path = f"{log_folder}/{self.algo}/"
+        info_str = f"_{args.info}" if args.info is not None else ""
         self.save_path = os.path.join(
-            self.log_path, f"{self.env_id}_{get_latest_run_id(self.log_path, self.env_id) + 1}{uuid_str}"
+            self.log_path,
+            f"{self.env_id}_{get_latest_run_id(self.log_path, self.env_id) + 1}{info_str}{uuid_str}"
         )
         self.params_path = f"{self.save_path}/{self.env_id}"
         self.out_logger = f"{self.save_path}/log"
