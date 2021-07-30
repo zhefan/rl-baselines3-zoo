@@ -13,7 +13,7 @@ replearn:
                        features_extractor_class=AtariRepNatureCNN,
                        features_extractor_kwargs=dict(features_dim=256,
                                                       no_downsample=True,
-                                                      end_with_relu=False,
+                                                      end_with_relu=True,
                                                       ),
                   )"
 
