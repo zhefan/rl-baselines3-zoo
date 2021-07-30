@@ -1,7 +1,7 @@
 atari-py==0.2.5  # bug in new versions
 # stable-baselines3[extra,tests,docs]>=1.1.0a11
 box2d-py==2.3.8
-pybullet
+pybullet==3.1.6  # 3.1.7 stuck at building wheel
 gym-minigrid
 scikit-optimize
 optuna

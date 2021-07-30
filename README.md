@@ -464,6 +464,7 @@ cd ../rl-baselines3-zoo/
 python3.7 -m venv venv
 . venv/bin/activate
 pip install -U pip
+pip install torch==1.8.1
 pip install -e ../stable-baselines3/[docs,tests,extra]
 pip install -r requirements.txt
 ```
