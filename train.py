@@ -109,7 +109,7 @@ if __name__ == "__main__":  # noqa: C901
         help="Overwrite hyperparameter (e.g. learning_rate:0.01 train_freq:10)",
     )
     parser.add_argument("-uuid", "--uuid", action="store_true", default=False, help="Ensure that the run has a unique ID")
-    parser.add_argument("--replearn", type=str, default=None, help="Representation learned encoder path")
+    parser.add_argument("--encoder", type=str, default=None, help="Representation learned encoder path")
     parser.add_argument("--encfreeze", action="store_true", default=False, help="Freeze representation encoder weights")
     args = parser.parse_args()
 
