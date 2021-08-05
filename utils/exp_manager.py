@@ -34,6 +34,7 @@ from stable_baselines3.replearn.atari_rep import AtariRepNatureCNN
 # For custom activation fn
 import torch
 from torch import nn as nn  # noqa: F401
+from torch.optim import Adam
 
 # Register custom envs
 import utils.import_envs  # noqa: F401 pytype: disable=import-error
