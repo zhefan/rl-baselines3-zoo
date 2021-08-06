@@ -29,7 +29,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv,
 from stable_baselines3.common.logger import configure
 
 # For rep learn
-from stable_baselines3.replearn.atari_rep import AtariRepNatureCNN
+from stable_baselines3.replearn.atari_rep import AtariRepNatureCNN, NatureCNNAutoEncoder
 
 # For custom activation fn
 import torch
