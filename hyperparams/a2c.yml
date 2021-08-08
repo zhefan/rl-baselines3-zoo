@@ -1,4 +1,4 @@
-encoder:
+pretrain:
   env_wrapper:
     stable_baselines3.common.atari_wrappers.AtariWrapper:
       screen_size_w: 160

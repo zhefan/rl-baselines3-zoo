@@ -152,7 +152,7 @@ class ExperimentManager(object):
         self.params_path = f"{self.save_path}/{self.env_id}"
         self.out_logger = f"{self.save_path}/log"
 
-        self.encoder = args.encoder  # rep learned encoder path
+        self.pretrain = args.pretrain  # pretrained encoder path
         self.encfreeze = args.encfreeze  # whether to freeze encoder weight
 
     def setup_experiment(self) -> Optional[BaseAlgorithm]:
@@ -187,9 +187,9 @@ class ExperimentManager(object):
                 **self._hyperparams,
             )
             # load replearn encoder weights
-            if self.encoder is not None:
-                print(f"Loading representation encoder parameters from {self.encoder}")
-                pretrained_encoder = torch.load(self.encoder)
+            if self.pretrain is not None:
+                print(f"Loading pretrained encoder parameters from {self.pretrain}")
+                pretrained_encoder = torch.load(self.pretrain)
                 # set feature extractor parameters
                 model.policy.features_extractor.load_state_dict(pretrained_encoder)
                 if self.encfreeze:  # freeze encoder weight
@@ -268,8 +268,8 @@ class ExperimentManager(object):
             hyperparams_dict = yaml.safe_load(f)
             if self.env_id in list(hyperparams_dict.keys()):
                 hyperparams = hyperparams_dict[self.env_id]
-            elif self.encoder is not None:
-                hyperparams = hyperparams_dict["encoder"]
+            elif self.pretrain is not None:
+                hyperparams = hyperparams_dict["pretrain"]
             elif self._is_atari:
                 hyperparams = hyperparams_dict["atari"]
             else:
