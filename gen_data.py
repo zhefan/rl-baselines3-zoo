@@ -25,6 +25,7 @@ def main():  # noqa: C901
     parser.add_argument("--num-threads", help="Number of threads for PyTorch (-1 to use default)", default=-1, type=int)
     parser.add_argument("--n-envs", help="number of environments", default=1, type=int)
     parser.add_argument("--exp-id", help="Experiment ID (default: 0: latest, -1: no exp folder)", default=0, type=int)
+    parser.add_argument('--exp-dir', type=str, default=None, help="experiment file directory")
     parser.add_argument("--verbose", help="Verbose mode (0: no output, 1: INFO)", default=1, type=int)
     parser.add_argument(
         "--no-render", action="store_true", default=False, help="Do not render the environment (useful for tests)"
@@ -73,8 +74,9 @@ def main():  # noqa: C901
         args.exp_id = get_latest_run_id(os.path.join(folder, algo), env_id)
         print(f"Loading latest experiment, id={args.exp_id}")
 
-    # Sanity checks
-    if args.exp_id > 0:
+    if args.exp_dir is not None:
+        log_path = os.path.join(folder, algo, args.exp_dir)
+    elif args.exp_id > 0:  # Sanity checks
         log_path = os.path.join(folder, algo, f"{env_id}_{args.exp_id}")
     else:
         log_path = os.path.join(folder, algo)
