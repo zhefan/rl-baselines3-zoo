@@ -4,16 +4,66 @@ import os
 import sys
 import random
 import json
+import copy
+from typing import List
 
 import numpy as np
 import torch as th
 import yaml
-from stable_baselines3.common.utils import set_random_seed
+from stable_baselines3.common.utils import set_random_seed, obs_as_tensor,\
+    is_vectorized_observation
+from stable_baselines3.common.preprocessing import maybe_transpose, is_image_space
 
 import utils.import_envs  # noqa: F401 pylint: disable=unused-import
 from utils import ALGOS, create_test_env, get_latest_run_id, get_saved_hyperparams
 from utils.exp_manager import ExperimentManager
 from utils.utils import StoreDict
+
+
+def preprocess_obs(observation, observation_space, device):
+    """preprocess observation"""
+    vectorized_env = False
+    if isinstance(observation, dict):
+        # need to copy the dict as the dict in VecFrameStack will become a torch tensor
+        observation = copy.deepcopy(observation)
+        for key, obs in observation.items():
+            obs_space = observation_space.spaces[key]
+            if is_image_space(obs_space):
+                obs_ = maybe_transpose(obs, obs_space)
+            else:
+                obs_ = np.array(obs)
+            vectorized_env = vectorized_env or is_vectorized_observation(obs_, obs_space)
+            # Add batch dimension if needed
+            observation[key] = obs_.reshape((-1,) + observation_space[key].shape)
+
+    elif is_image_space(observation_space):
+        # Handle the different cases for images
+        # as PyTorch use channel first format
+        observation = maybe_transpose(observation, observation_space)
+
+    else:
+        observation = np.array(observation)
+
+    if not isinstance(observation, dict):
+        # Dict obs need to be handled separately
+        vectorized_env = is_vectorized_observation(observation, observation_space)
+        # Add batch dimension if needed
+        observation = observation.reshape((-1,) + observation_space.shape)
+
+    observation = obs_as_tensor(observation, device)
+    return observation
+
+
+def save_rollout_q(out_dir: str, env_id: str, episode_num: int,
+                   data: List[np.ndarray], info: str) -> None:
+
+    # skip starting frames if space invaders
+    trunc_idx = 125 if env_id == 'SpaceInvadersNoFrameskip-v4' else 0
+    trunc_idx = 36 if env_id == 'SpaceInvaders-v4' else 0
+    print(f"> Save q_values {episode_num}..."
+          f"trunc idx: {trunc_idx}, saving {len(data[trunc_idx:])} frames")
+    np.savez(os.path.join(out_dir, env_id, info, f"rollout_{episode_num}_q"),
+             q_values=np.array(data[trunc_idx:]))
 
 
 def main():  # noqa: C901
@@ -170,7 +220,7 @@ def main():  # noqa: C901
 
     state = None
     episode_reward = 0.0
-    episode_rewards, episode_lengths = [], []
+    episode_rewards, episode_lengths, episode_q = [], [], []
     ep_len = 0
     # For HER, monitor success rate
     successes = []
@@ -184,6 +234,12 @@ def main():  # noqa: C901
                     action, state = env.action_space.sample(), None
                     action = np.array([action])
                 else:
+                    if args.algo == 'dqn':
+                        prep_obs = preprocess_obs(obs, model.observation_space, model.device)
+                        with th.no_grad():
+                            model.q_net.eval()
+                            q_values = model.q_net(prep_obs)
+                            episode_q.append(q_values.squeeze().cpu().numpy())
                     action, state = model.predict(obs, state=state, deterministic=deterministic)
                 obs, reward, done, infos = env.step(action)
                 if not args.no_render:
@@ -200,6 +256,9 @@ def main():  # noqa: C901
                         if episode_infos is not None:
                             print(f"Atari Episode Score: {episode_infos['r']:.2f}")
                             print("Atari Episode Length", episode_infos["l"])
+                            if args.algo == 'dqn':
+                                save_rollout_q(args.rootdir, env_id, rollout_idx, episode_q, args.info)
+                                episode_q.clear()  # clear cache
 
                     if done and not is_atari and args.verbose > 0:
                         # NOTE: for env using VecNormalize, the mean reward
