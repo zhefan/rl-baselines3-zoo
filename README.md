@@ -126,6 +126,11 @@ To use an agent trained by yourself:
 python gen_data.py --algo a2c --env SpaceInvaders-v4 -f logs/ --load-best --no-render --rollouts 480 --rootdir datasets/ --info thread_1 --seed 0
 ```
 
+To generate without random actions:
+```python
+python gen_data.py --algo dqn --env SeaquestNoFrameskip-v4 -f logs/ --rollouts 1 --rootdir datasets/ --info thread_0 --exp-dir SeaquestNoFrameskip-v4_default_baseline_1 --load-checkpoint 40000000 --epsilon 0
+```
+
 ### Inspect Collected Data
 
 ```python
