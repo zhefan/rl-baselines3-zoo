@@ -56,7 +56,12 @@ if __name__ == "__main__":  # noqa: C901
     parser.add_argument("--info", type=str, help="extra info for save path", default=None)
     parser.add_argument("--seed", help="Random generator seed", type=int, default=-1)
     parser.add_argument("--vec-env", help="VecEnv type", type=str, default="dummy", choices=["dummy", "subproc"])
-    parser.add_argument("--n-trials", help="Number of trials for optimizing hyperparameters", type=int, default=10)
+    parser.add_argument(
+        "--n-trials",
+        help="Number of trials for optimizing hyperparameters. This applies to each optimization runner, not the entire optimization process.",
+        type=int,
+        default=10,
+    )
     parser.add_argument(
         "-optimize", "--optimize-hyperparameters", action="store_true", default=False, help="Run hyperparameters search"
     )
